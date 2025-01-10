@@ -31,14 +31,19 @@ exports.addTask = async (req, res) => {
 
 // Get all tasks for a user
 exports.getTasks = async (req, res) => {
-  const userId = req.user.id;  // User ID from the decoded JWT token
-  
-
   try {
+    // Validate that userId is available
+    const userId = req.user?.id; // Safely access user ID
+    if (!userId) {
+      return res.status(400).json({ message: 'User ID is required' });
+    }
+
+    // Fetch tasks for the user
     const tasks = await Task.find({ userId });
     res.status(200).json(tasks);
   } catch (error) {
-    console.error('Error fetching tasks:', error);
+    console.error('Error fetching tasks:', error.message);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
