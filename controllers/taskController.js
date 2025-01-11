@@ -46,4 +46,35 @@ exports.getTasks = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+//delete a single task 
+exports.deleteSingleTask = async (req, res) => {
+  const { id } = req.params; // Extract id from params
+  try {
+    const deleteTask = await Task.findByIdAndDelete(id); // Pass id directly
+    if (!deleteTask) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+    return res.status(200).json({ message: "Task has been deleted", result: deleteTask });
+  } catch (error) {
+    console.error("Error in deleteSingleTask:", error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+
+//Delete all task *DANGER
+exports.deleteTasks = async(req,res)=>{
+  try {
+  const result = await Task.deleteMany({});
+  return res.status(200).json({
+    message:`a total of ${result.deletedCount} tasks has been deleted`
+  })
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: `an error has occured while deleting tasks.`,
+      error:error.message
+    })
+  }
+}
 
