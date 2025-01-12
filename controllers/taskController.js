@@ -61,6 +61,31 @@ exports.deleteSingleTask = async (req, res) => {
   }
 };
 
+//edit a task
+exports.editTask = async (req,res) =>{
+  const {id} = req.params;
+  const updates = req.body;
+
+
+  try {
+    const updateTask = await Task.findOneAndUpdate(
+      {_id:id},
+      {$set:updates},
+      {new:true}
+    )
+
+  if (!updateTask){
+    return res.status(404).json({message: `task id ${id} not found`})
+  }
+  return res.status(200).json({message: `The task with id of ${id} has been updated`,data: updateTask})
+  } catch (error) {
+    return res.status(500).json({
+      message: "Server error occurred.",
+      error: error.message,
+    });
+  }
+} 
+
 
 //Delete all task *DANGER
 exports.deleteTasks = async(req,res)=>{

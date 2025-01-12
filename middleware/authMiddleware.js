@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+require('dotenv').config(); // Load environment variables
+
 
 const authenticate = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -9,7 +11,7 @@ const authenticate = (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token, 'secret_jwt_key'); // Replace with your secret key
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY); // Replace with your secret key
         req.user = decoded; // Attach decoded token to the request object
         next(); // Allow access to the route
     } catch (error) {
