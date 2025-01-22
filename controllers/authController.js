@@ -1,6 +1,7 @@
 const User = require("../models/userSchema");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+require('dotenv').config();
 
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -21,7 +22,7 @@ exports.loginUser = async (req, res) => {
         id: user._id,
         username: user.username,
       },
-      `secret_jwt_key`,
+      process.env.JWT_SECRET_KEY,
       { expiresIn: `1h` }
     );
     console.log({token})
